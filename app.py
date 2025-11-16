@@ -1,75 +1,47 @@
 import streamlit as st
-import requests
 import os
-import torch
-
-# ========= PATCH: paksa torch.load pakai weights_only=False =========
-_real_torch_load = torch.load
-
-def patched_torch_load(*args, **kwargs):
-    kwargs["weights_only"] = False
-    return _real_torch_load(*args, **kwargs)
-
-torch.load = patched_torch_load
-# ====================================================================
-
+import gdown
 from ultralytics import YOLO
 import cv2
 import numpy as np
 
-st.title("VSD Segmentation App")
+st.title("ASD Segmentation App")
 
+# ===============================
+# 1. Path model + Google Drive ID
+# ===============================
 MODEL_DIR = "model"
-MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
-
-# === GUNAKAN URL YANG BENAR ===
-MODEL_URL = "https://github.com/rafkirafki551-a11y/ASD-4CH-Segmentation/releases/download/v1.0/best.pt"
-
 os.makedirs(MODEL_DIR, exist_ok=True)
 
+MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
+GOOGLE_DRIVE_ID = "1o7MiXhd_cZts_sRyB5EOpGGal2Lt3L1n"
+DOWNLOAD_URL = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_ID}"
+
 # ===============================
-# 1. Download model jika belum ada
+# 2. Download model jika belum ada
 # ===============================
 if not os.path.exists(MODEL_PATH):
-    st.warning("Mengunduh model dari GitHub Release... Harap tunggu.")
+    st.warning("Mengunduh model dari Google Drive...")
 
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-
-        with requests.get(MODEL_URL, stream=True, headers=headers) as r:
-            r.raise_for_status()
-
-            total = int(r.headers.get("Content-Length", 0))
-            downloaded = 0
-
-            with open(MODEL_PATH, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
-                        downloaded += len(chunk)
-                        if total > 0:
-                            st.progress(downloaded / total)
-
+        gdown.download(DOWNLOAD_URL, MODEL_PATH, quiet=False)
         st.success("Model berhasil diunduh.")
     except Exception as e:
         st.error(f"Gagal mengunduh model: {e}")
-        st.stop()
 
 # ===============================
-# 2. Load model
+# 3. Load model
 # ===============================
 try:
-    st.info("Memuat model YOLO...")
     model = YOLO(MODEL_PATH)
     st.success("Model berhasil dimuat.")
 except Exception as e:
     st.error(f"Gagal memuat model: {e}")
-    st.stop()
 
 # ===============================
-# 3. Upload dan proses gambar
+# 4. Upload dan proses gambar
 # ===============================
-uploaded_file = st.file_uploader("Upload gambar 4CH", type=["png", "jpg", "jpeg"])
+uploaded_file = st.file_uploader("Upload gambar", type=["png", "jpg", "jpeg"])
 
 if uploaded_file:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
@@ -77,6 +49,7 @@ if uploaded_file:
 
     st.image(img, caption="Input Image", use_column_width=True)
 
+    # Run YOLO segmentation
     results = model(img)
     annotated = results[0].plot()
 
