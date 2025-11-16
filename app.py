@@ -1,9 +1,10 @@
 import streamlit as st
-from ultralytics import YOLO
+from ultralytics.yolo.engine.model import YOLO
 import cv2
 import numpy as np
 import gdown
 import os
+
 
 st.title("VSD Segmentation App")
 
@@ -60,3 +61,4 @@ if uploaded_file:
     annotated = results[0].plot()
 
     st.image(annotated, caption="Hasil Segmentasi", use_column_width=True)
+
