@@ -1,6 +1,6 @@
-ultralytics
+ultralytics==8.2.11
+opencv-python-headless==4.7.0.72
 numpy
 streamlit
 gdown
 torch
-opencv-python-headless
