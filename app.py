@@ -21,6 +21,8 @@ st.title("VSD Segmentation App")
 
 MODEL_DIR = "model"
 MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
+
+# === GUNAKAN URL YANG BENAR ===
 MODEL_URL = "https://github.com/rafkirafki551-a11y/ASD-4CH-Segmentation/releases/download/v1.0/best.pt"
 
 os.makedirs(MODEL_DIR, exist_ok=True)
