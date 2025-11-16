@@ -1,11 +1,7 @@
-# --- LIBRARIES UTAMA ---
-streamlit==1.32.0
+ultralytics==8.0.20
 numpy==1.26.4
 torch
-gdown
-
-# --- OPENCV SAFE VERSION ---
 opencv-python-headless==4.7.0.72
-
-# --- YOLO VERSION YANG KOMPATIBEL ---
-ultralytics==8.0.20
+streamlit==1.32.0
+gdown
+Pillow
