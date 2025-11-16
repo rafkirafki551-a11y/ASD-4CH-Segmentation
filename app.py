@@ -1,20 +1,26 @@
 import streamlit as st
 import requests
 import os
+import torch
+
+# ========= PATCH: paksa torch.load pakai weights_only=False =========
+_real_torch_load = torch.load
+
+def patched_torch_load(*args, **kwargs):
+    kwargs["weights_only"] = False
+    return _real_torch_load(*args, **kwargs)
+
+torch.load = patched_torch_load
+# ====================================================================
+
 from ultralytics import YOLO
 import cv2
 import numpy as np
 
 st.title("VSD Segmentation App")
 
-# ===============================
-# 0. Konfigurasi model path
-# ===============================
 MODEL_DIR = "model"
 MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
-
-# !! IMPORTANT !!
-# Link GitHub Release HARUS format berikut:
 MODEL_URL = "https://github.com/rafkirafki551-a11y/ASD-4CH-Segmentation/releases/download/v1.0/best.pt"
 
 os.makedirs(MODEL_DIR, exist_ok=True)
@@ -69,7 +75,6 @@ if uploaded_file:
 
     st.image(img, caption="Input Image", use_column_width=True)
 
-    # Jalankan model
     results = model(img)
     annotated = results[0].plot()
 
