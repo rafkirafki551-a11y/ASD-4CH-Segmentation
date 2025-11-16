@@ -2,6 +2,8 @@
 
 Repositori ini berisi hasil dan evaluasi dari model *instance segmentation* **YOLOv8** yang dilatih untuk mendeteksi dan mensegmentasi struktur jantung pada citra ekokardiogram. Fokus utama proyek ini adalah identifikasi defek septum jantung (kemungkinan Atrial Septal Defect/ASD).
 
+**Streamlit app:** https://asd-4ch-segmentation-vzeh7gzbmbnga3m7nndmtx.streamlit.app/
+
 Model ini dilatih untuk mengklasifikasikan 3 kelas:
 
 * **IVS** (Interventricular Septum): Dinding pemisah antara ventrikel (bilik) jantung.
