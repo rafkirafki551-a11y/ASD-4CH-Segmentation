@@ -1,5 +1,6 @@
 import streamlit as st
-from ultralytics.yolo.engine.model import YOLO
+from ultralytics import YOLO
+
 import cv2
 import numpy as np
 import gdown
@@ -61,4 +62,5 @@ if uploaded_file:
     annotated = results[0].plot()
 
     st.image(annotated, caption="Hasil Segmentasi", use_column_width=True)
+
 
