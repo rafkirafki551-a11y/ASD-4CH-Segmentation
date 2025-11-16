@@ -1,53 +1,43 @@
 import streamlit as st
+import requests
+import os
 from ultralytics import YOLO
-
 import cv2
 import numpy as np
-import gdown
-import os
-
 
 st.title("VSD Segmentation App")
 
-# =============================
-# 1. Download model dari Google Drive
-# =============================
-
 MODEL_DIR = "model"
 MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
-FILE_ID = "1o7MiXhd_cZts_sRyB5EOpGGal2Lt3L1n"   # <<--- EDIT di sini
+MODEL_URL = "https://github.com/rafkirafki551-a11y/ASD-4CH-Segmentation/releases/tag/v1.0/best.pt"
 
-# Buat folder model jika belum ada
 os.makedirs(MODEL_DIR, exist_ok=True)
 
-# Download jika file belum ada
+# ===============================
+# 1. Download model jika belum ada
+# ===============================
 if not os.path.exists(MODEL_PATH):
-    st.warning("Model belum ditemukan. Mengunduh dari Google Drive...")
+    st.warning("Mengunduh model dari GitHub Release...")
 
-    url = f"https://drive.google.com/uc?id={FILE_ID}"
+    with requests.get(MODEL_URL, stream=True) as r:
+        r.raise_for_status()
+        with open(MODEL_PATH, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
 
-    try:
-        gdown.download(url, MODEL_PATH, quiet=False)
-        st.success("Model berhasil diunduh.")
-    except Exception as e:
-        st.error(f"Gagal mengunduh model: {e}")
+    st.success("Model berhasil diunduh.")
 
-# =============================
-# 2. Load Model
-# =============================
+# ===============================
+# 2. Load model
+# ===============================
+model = YOLO(MODEL_PATH)
+st.success("Model berhasil dimuat.")
 
-if os.path.exists(MODEL_PATH):
-    st.info("Memuat model YOLO...")
-    model = YOLO(MODEL_PATH)
-    st.success("Model berhasil dimuat.")
-else:
-    st.stop()   # hentikan jika model tidak tersedia
-
-# =============================
-# 3. Upload dan Proses Gambar
-# =============================
-
-uploaded_file = st.file_uploader("Upload gambar 4CH", type=["jpg", "png", "jpeg"])
+# ===============================
+# 3. Upload dan proses gambar
+# ===============================
+uploaded_file = st.file_uploader("Upload gambar", type=["png", "jpg", "jpeg"])
 
 if uploaded_file:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
@@ -55,12 +45,7 @@ if uploaded_file:
 
     st.image(img, caption="Input Image", use_column_width=True)
 
-    # Run model
     results = model(img)
-
-    # Hasil segmentasi
     annotated = results[0].plot()
 
     st.image(annotated, caption="Hasil Segmentasi", use_column_width=True)
-
-
