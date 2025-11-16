@@ -1,4 +1,4 @@
-# Segmentasi Atrial Septal Defect (ASD) menggunakan YOLOv8
+# Segmentasi Atrial Septal Defect (ASD) View 4CH menggunakan YOLOv8
 
 Repositori ini berisi hasil dan evaluasi dari model *instance segmentation* **YOLOv8** yang dilatih untuk mendeteksi dan mensegmentasi struktur jantung pada citra ekokardiogram. Fokus utama proyek ini adalah identifikasi defek septum jantung (kemungkinan Atrial Septal Defect/ASD).
 
