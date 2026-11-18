@@ -14,7 +14,7 @@ MODEL_DIR = "model"
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 MODEL_PATH = os.path.join(MODEL_DIR, "best.pt")
-GOOGLE_DRIVE_ID = "1o7MiXhd_cZts_sRyB5EOpGGal2Lt3L1n"
+GOOGLE_DRIVE_ID = "1PzQRCwW1IkoM0pnoNo0A-9q7n3OufmK1"
 DOWNLOAD_URL = f"https://drive.google.com/uc?id={GOOGLE_DRIVE_ID}"
 
 # ===============================
