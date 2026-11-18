@@ -4,3 +4,4 @@ numpy<2
 torch
 gdown
 streamlit
+dill
