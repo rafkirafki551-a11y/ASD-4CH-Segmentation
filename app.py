@@ -5,6 +5,8 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 
+pip install dill
+
 st.title("ASD Segmentation App")
 
 # ===============================
